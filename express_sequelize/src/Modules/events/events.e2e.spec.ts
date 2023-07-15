@@ -1,14 +1,14 @@
 import { format, subYears, addYears } from 'date-fns';
-import * as request from 'supertest';
+import request from 'supertest';
 import Server from "../../server";
 
 describe('events', () => {
-  beforeAll(() => {
-    return Server.init();
+  beforeAll(async () => {
+    await Server.init();
   });
 
   it(`GET /events/warmupevents`, async () => {
-    const response = await request(Server.getApp().app)
+    const response = await request(Server.getApp())
       .get('/events/warmupevents')
       .expect(200);
 
@@ -27,7 +27,7 @@ describe('events', () => {
     const date1 = format(subYears(new Date(), 1), 'yyyy');
     const date2 = format(addYears(new Date(), 1), 'yyyy');
 
-    const response = await request(Server.getApp().app)
+    const response = await request(Server.getApp())
       .get('/events/events')
       .expect(200);
 
@@ -54,7 +54,7 @@ describe('events', () => {
 
   it('GET /events/futureevents', async () => {
     const date2 = format(addYears(new Date(), 1), 'yyyy');
-    const response = await request(Server.getApp().app)
+    const response = await request(Server.getApp())
       .get('/events/futureevents')
       .expect(200);
 
@@ -75,7 +75,7 @@ describe('events', () => {
     expect(result[1].workshops[1].name).toBe('Navigating the function jungle');
   });
 
-  afterAll(() => {
-    return Server.close();
+  afterAll(async () => {
+    await Server.close();
   });
 });
